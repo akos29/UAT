@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="UATSytemDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Modules">
+          <Key>
+            <PropertyRef Name="mId" />
+          </Key>
+          <Property Name="mId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ModuleUser">
+          <Key>
+            <PropertyRef Name="Modules_mId" />
+            <PropertyRef Name="Users_uId" />
+          </Key>
+          <Property Name="Modules_mId" Type="int" Nullable="false" />
+          <Property Name="Users_uId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Scenarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Reference" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Importance" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Module_mId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TestCases">
+          <Key>
+            <PropertyRef Name="tcId" />
+          </Key>
+          <Property Name="tcId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TCode" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ScreenTitle" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Step" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Precondition" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExpectedResult" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ActualResult" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PassFail" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ScenarioId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestDatas">
+          <Key>
+            <PropertyRef Name="tdId" />
+          </Key>
+          <Property Name="tdId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FieldName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FieldType" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PassFail" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TestCase_tcId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="uId" />
+          </Key>
+          <Property Name="uId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Organization" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Department" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Previlage" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTestCase">
+          <Key>
+            <PropertyRef Name="Users_uId" />
+            <PropertyRef Name="TestCases_tcId" />
+          </Key>
+          <Property Name="Users_uId" Type="int" Nullable="false" />
+          <Property Name="TestCases_tcId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTestData">
+          <Key>
+            <PropertyRef Name="Users_uId" />
+            <PropertyRef Name="TestDatas_tdId" />
+          </Key>
+          <Property Name="Users_uId" Type="int" Nullable="false" />
+          <Property Name="TestDatas_tdId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ModuleUser_Module">
+          <End Role="Modules" Type="Self.Modules" Multiplicity="1" />
+          <End Role="ModuleUser" Type="Self.ModuleUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modules">
+              <PropertyRef Name="mId" />
+            </Principal>
+            <Dependent Role="ModuleUser">
+              <PropertyRef Name="Modules_mId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ModuleUser_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="ModuleUser" Type="Self.ModuleUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="uId" />
+            </Principal>
+            <Dependent Role="ModuleUser">
+              <PropertyRef Name="Users_uId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScenarioModule">
+          <End Role="Modules" Type="Self.Modules" Multiplicity="1" />
+          <End Role="Scenarios" Type="Self.Scenarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modules">
+              <PropertyRef Name="mId" />
+            </Principal>
+            <Dependent Role="Scenarios">
+              <PropertyRef Name="Module_mId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScenarioTestCase">
+          <End Role="Scenarios" Type="Self.Scenarios" Multiplicity="1" />
+          <End Role="TestCases" Type="Self.TestCases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scenarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestCases">
+              <PropertyRef Name="ScenarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestCaseTestData">
+          <End Role="TestCases" Type="Self.TestCases" Multiplicity="1" />
+          <End Role="TestDatas" Type="Self.TestDatas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestCases">
+              <PropertyRef Name="tcId" />
+            </Principal>
+            <Dependent Role="TestDatas">
+              <PropertyRef Name="TestCase_tcId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTestCase_TestCase">
+          <End Role="TestCases" Type="Self.TestCases" Multiplicity="1" />
+          <End Role="UserTestCase" Type="Self.UserTestCase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestCases">
+              <PropertyRef Name="tcId" />
+            </Principal>
+            <Dependent Role="UserTestCase">
+              <PropertyRef Name="TestCases_tcId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTestCase_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTestCase" Type="Self.UserTestCase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="uId" />
+            </Principal>
+            <Dependent Role="UserTestCase">
+              <PropertyRef Name="Users_uId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTestData_TestData">
+          <End Role="TestDatas" Type="Self.TestDatas" Multiplicity="1" />
+          <End Role="UserTestData" Type="Self.UserTestData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestDatas">
+              <PropertyRef Name="tdId" />
+            </Principal>
+            <Dependent Role="UserTestData">
+              <PropertyRef Name="TestDatas_tdId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTestData_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTestData" Type="Self.UserTestData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="uId" />
+            </Principal>
+            <Dependent Role="UserTestData">
+              <PropertyRef Name="Users_uId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UATSytemDbModelStoreContainer">
+          <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ModuleUser" EntityType="Self.ModuleUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Scenarios" EntityType="Self.Scenarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestCases" EntityType="Self.TestCases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestDatas" EntityType="Self.TestDatas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTestCase" EntityType="Self.UserTestCase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTestData" EntityType="Self.UserTestData" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ModuleUser_Module" Association="Self.FK_ModuleUser_Module">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="ModuleUser" EntitySet="ModuleUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ModuleUser_User" Association="Self.FK_ModuleUser_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ModuleUser" EntitySet="ModuleUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScenarioModule" Association="Self.FK_ScenarioModule">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="Scenarios" EntitySet="Scenarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScenarioTestCase" Association="Self.FK_ScenarioTestCase">
+            <End Role="Scenarios" EntitySet="Scenarios" />
+            <End Role="TestCases" EntitySet="TestCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestCaseTestData" Association="Self.FK_TestCaseTestData">
+            <End Role="TestCases" EntitySet="TestCases" />
+            <End Role="TestDatas" EntitySet="TestDatas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTestCase_TestCase" Association="Self.FK_UserTestCase_TestCase">
+            <End Role="TestCases" EntitySet="TestCases" />
+            <End Role="UserTestCase" EntitySet="UserTestCase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTestCase_User" Association="Self.FK_UserTestCase_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTestCase" EntitySet="UserTestCase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTestData_TestData" Association="Self.FK_UserTestData_TestData">
+            <End Role="TestDatas" EntitySet="TestDatas" />
+            <End Role="UserTestData" EntitySet="UserTestData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTestData_User" Association="Self.FK_UserTestData_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTestData" EntitySet="UserTestData" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UATSytemDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="mId" />
+          </Key>
+          <Property Name="mId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Scenarios" Relationship="Self.FK_ScenarioModule" FromRole="Modules" ToRole="Scenarios" />
+          <NavigationProperty Name="Users" Relationship="Self.ModuleUser" FromRole="Modules" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Scenario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Reference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Importance" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Module_mId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Module" Relationship="Self.FK_ScenarioModule" FromRole="Scenarios" ToRole="Modules" />
+          <NavigationProperty Name="TestCases" Relationship="Self.FK_ScenarioTestCase" FromRole="Scenarios" ToRole="TestCases" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TestCas">
+          <Key>
+            <PropertyRef Name="tcId" />
+          </Key>
+          <Property Name="tcId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ScreenTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Step" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Precondition" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ExpectedResult" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ActualResult" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PassFail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ScenarioId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Scenario" Relationship="Self.FK_ScenarioTestCase" FromRole="TestCases" ToRole="Scenarios" />
+          <NavigationProperty Name="TestDatas" Relationship="Self.FK_TestCaseTestData" FromRole="TestCases" ToRole="TestDatas" />
+          <NavigationProperty Name="Users" Relationship="Self.UserTestCase" FromRole="TestCases" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="TestData">
+          <Key>
+            <PropertyRef Name="tdId" />
+          </Key>
+          <Property Name="tdId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FieldName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FieldType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PassFail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TestCase_tcId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TestCas" Relationship="Self.FK_TestCaseTestData" FromRole="TestDatas" ToRole="TestCases" />
+          <NavigationProperty Name="Users" Relationship="Self.UserTestData" FromRole="TestDatas" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="uId" />
+          </Key>
+          <Property Name="uId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Organization" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Department" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Previlage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Modules" Relationship="Self.ModuleUser" FromRole="Users" ToRole="Modules" />
+          <NavigationProperty Name="TestCases" Relationship="Self.UserTestCase" FromRole="Users" ToRole="TestCases" />
+          <NavigationProperty Name="TestDatas" Relationship="Self.UserTestData" FromRole="Users" ToRole="TestDatas" />
+        </EntityType>
+        <Association Name="FK_ScenarioModule">
+          <End Role="Modules" Type="Self.Module" Multiplicity="1" />
+          <End Role="Scenarios" Type="Self.Scenario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Modules">
+              <PropertyRef Name="mId" />
+            </Principal>
+            <Dependent Role="Scenarios">
+              <PropertyRef Name="Module_mId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScenarioTestCase">
+          <End Role="Scenarios" Type="Self.Scenario" Multiplicity="1" />
+          <End Role="TestCases" Type="Self.TestCas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scenarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestCases">
+              <PropertyRef Name="ScenarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestCaseTestData">
+          <End Role="TestCases" Type="Self.TestCas" Multiplicity="1" />
+          <End Role="TestDatas" Type="Self.TestData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestCases">
+              <PropertyRef Name="tcId" />
+            </Principal>
+            <Dependent Role="TestDatas">
+              <PropertyRef Name="TestCase_tcId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ModuleUser">
+          <End Role="Modules" Type="Self.Module" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="UserTestCase">
+          <End Role="TestCases" Type="Self.TestCas" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="UserTestData">
+          <End Role="TestDatas" Type="Self.TestData" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="UATSytemDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Modules" EntityType="Self.Module" />
+          <EntitySet Name="Scenarios" EntityType="Self.Scenario" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="TestCases" EntityType="Self.TestCas" />
+          <EntitySet Name="TestDatas" EntityType="Self.TestData" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_ScenarioModule" Association="Self.FK_ScenarioModule">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="Scenarios" EntitySet="Scenarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScenarioTestCase" Association="Self.FK_ScenarioTestCase">
+            <End Role="Scenarios" EntitySet="Scenarios" />
+            <End Role="TestCases" EntitySet="TestCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestCaseTestData" Association="Self.FK_TestCaseTestData">
+            <End Role="TestCases" EntitySet="TestCases" />
+            <End Role="TestDatas" EntitySet="TestDatas" />
+          </AssociationSet>
+          <AssociationSet Name="ModuleUser" Association="Self.ModuleUser">
+            <End Role="Modules" EntitySet="Modules" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserTestCase" Association="Self.UserTestCase">
+            <End Role="TestCases" EntitySet="TestCases" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserTestData" Association="Self.UserTestData">
+            <End Role="TestDatas" EntitySet="TestDatas" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UATSytemDbModelStoreContainer" CdmEntityContainer="UATSytemDbEntities">
+          <EntitySetMapping Name="Modules">
+            <EntityTypeMapping TypeName="UATSytemDbModel.Module">
+              <MappingFragment StoreEntitySet="Modules">
+                <ScalarProperty Name="mId" ColumnName="mId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Scenarios">
+            <EntityTypeMapping TypeName="UATSytemDbModel.Scenario">
+              <MappingFragment StoreEntitySet="Scenarios">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Importance" ColumnName="Importance" />
+                <ScalarProperty Name="Module_mId" ColumnName="Module_mId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="UATSytemDbModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestCases">
+            <EntityTypeMapping TypeName="UATSytemDbModel.TestCas">
+              <MappingFragment StoreEntitySet="TestCases">
+                <ScalarProperty Name="tcId" ColumnName="tcId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TCode" ColumnName="TCode" />
+                <ScalarProperty Name="ScreenTitle" ColumnName="ScreenTitle" />
+                <ScalarProperty Name="Step" ColumnName="Step" />
+                <ScalarProperty Name="Precondition" ColumnName="Precondition" />
+                <ScalarProperty Name="ExpectedResult" ColumnName="ExpectedResult" />
+                <ScalarProperty Name="ActualResult" ColumnName="ActualResult" />
+                <ScalarProperty Name="PassFail" ColumnName="PassFail" />
+                <ScalarProperty Name="ScenarioId" ColumnName="ScenarioId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestDatas">
+            <EntityTypeMapping TypeName="UATSytemDbModel.TestData">
+              <MappingFragment StoreEntitySet="TestDatas">
+                <ScalarProperty Name="tdId" ColumnName="tdId" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="FieldType" ColumnName="FieldType" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="PassFail" ColumnName="PassFail" />
+                <ScalarProperty Name="TestCase_tcId" ColumnName="TestCase_tcId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="UATSytemDbModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="uId" ColumnName="uId" />
+                <ScalarProperty Name="UName" ColumnName="UName" />
+                <ScalarProperty Name="Organization" ColumnName="Organization" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Previlage" ColumnName="Previlage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ModuleUser" TypeName="UATSytemDbModel.ModuleUser" StoreEntitySet="ModuleUser">
+            <EndProperty Name="Modules">
+              <ScalarProperty Name="mId" ColumnName="Modules_mId" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="uId" ColumnName="Users_uId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserTestCase" TypeName="UATSytemDbModel.UserTestCase" StoreEntitySet="UserTestCase">
+            <EndProperty Name="TestCases">
+              <ScalarProperty Name="tcId" ColumnName="TestCases_tcId" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="uId" ColumnName="Users_uId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserTestData" TypeName="UATSytemDbModel.UserTestData" StoreEntitySet="UserTestData">
+            <EndProperty Name="TestDatas">
+              <ScalarProperty Name="tdId" ColumnName="TestDatas_tdId" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="uId" ColumnName="Users_uId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

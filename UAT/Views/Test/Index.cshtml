@@ -1,0 +1,35 @@
+﻿@model IEnumerable<UAT.Models.ModulesViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+
+<table class="table table-striped" style="width:30%" >
+
+    <thead> <tr >
+                <th> Module Name List</th>
+           </tr> 
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            <tr><td>Module ID</td> <td>Module Name</td></tr>
+            foreach (var item in Model)
+            {
+                
+                <tr>
+                    <td width="40%">@item.mId</td>
+                    <td>@item.Name</td>
+                </tr>
+            }
+            
+        }
+
+    </tbody>
+
+</table>
+
+
